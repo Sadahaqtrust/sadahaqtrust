@@ -1,0 +1,110 @@
+{
+  "banners": [
+    {
+      "id": "09f8d333abb376b9",
+      "type": "image",
+      "src": "/banners/sadahaq/09f8d333abb376b9.webp",
+      "link": "",
+      "sort": 0
+    },
+    {
+      "id": "1f9d59df2afc0865",
+      "type": "image",
+      "src": "/banners/sadahaq/1f9d59df2afc0865.webp",
+      "link": "",
+      "sort": 1
+    },
+    {
+      "id": "2369dba5a778f3e0",
+      "type": "image",
+      "src": "/banners/sadahaq/2369dba5a778f3e0.webp",
+      "link": "",
+      "sort": 2
+    },
+    {
+      "id": "25edfca86af8f9ca",
+      "type": "image",
+      "src": "/banners/sadahaq/25edfca86af8f9ca.webp",
+      "link": "",
+      "sort": 3
+    },
+    {
+      "id": "30a4c4447dd0b1d2",
+      "type": "image",
+      "src": "/banners/sadahaq/30a4c4447dd0b1d2.webp",
+      "link": "",
+      "sort": 4
+    },
+    {
+      "id": "435e12000a73bc2c",
+      "type": "image",
+      "src": "/banners/sadahaq/435e12000a73bc2c.webp",
+      "link": "",
+      "sort": 5
+    },
+    {
+      "id": "4b8ffcc8f24c1f6b",
+      "type": "image",
+      "src": "/banners/sadahaq/4b8ffcc8f24c1f6b.webp",
+      "link": "",
+      "sort": 6
+    },
+    {
+      "id": "77b3885b3cacf32b",
+      "type": "image",
+      "src": "/banners/sadahaq/77b3885b3cacf32b.webp",
+      "link": "",
+      "sort": 7
+    },
+    {
+      "id": "77ddadd708c928fd",
+      "type": "image",
+      "src": "/banners/sadahaq/77ddadd708c928fd.webp",
+      "link": "",
+      "sort": 8
+    },
+    {
+      "id": "8616b06feca8caf3",
+      "type": "image",
+      "src": "/banners/sadahaq/8616b06feca8caf3.webp",
+      "link": "",
+      "sort": 9
+    },
+    {
+      "id": "b42e86cdd54d6ee0",
+      "type": "image",
+      "src": "/banners/sadahaq/b42e86cdd54d6ee0.webp",
+      "link": "",
+      "sort": 10
+    },
+    {
+      "id": "b815dd4b863fa234",
+      "type": "image",
+      "src": "/banners/sadahaq/b815dd4b863fa234.webp",
+      "link": "",
+      "sort": 11
+    },
+    {
+      "id": "da33be5863d8f417",
+      "type": "image",
+      "src": "/banners/sadahaq/da33be5863d8f417.webp",
+      "link": "",
+      "sort": 12
+    },
+    {
+      "id": "ec763614d24a5706",
+      "type": "image",
+      "src": "/banners/sadahaq/ec763614d24a5706.webp",
+      "link": "",
+      "sort": 13
+    },
+    {
+      "id": "fb16976a7f8dbaf2",
+      "type": "image",
+      "src": "/banners/sadahaq/fb16976a7f8dbaf2.webp",
+      "link": "",
+      "sort": 14
+    }
+  ],
+  "updatedAt": "2026-05-03T12:00:00.000Z"
+}

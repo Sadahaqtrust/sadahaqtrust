@@ -1,0 +1,527 @@
+{
+  "services": [
+    {
+      "id": 1,
+      "icon": "🧾",
+      "label": "Accountant",
+      "url": "https://accountant.digitalrohtak.online"
+    },
+    {
+      "id": 2,
+      "icon": "⚖️",
+      "label": "Advocate",
+      "url": "https://advocate.digitalrohtak.online"
+    },
+    {
+      "id": 3,
+      "icon": "👗",
+      "label": "Apparel & Fashion",
+      "url": "https://fashion.digitalrohtak.online"
+    },
+    {
+      "id": 4,
+      "icon": "🏗️",
+      "label": "Architect",
+      "url": "https://architect.digitalrohtak.online"
+    },
+    {
+      "id": 5,
+      "icon": "🔮",
+      "label": "Astrology",
+      "url": "https://astrology.digitalrohtak.online"
+    },
+    {
+      "id": 6,
+      "icon": "🚗",
+      "label": "Automotive",
+      "url": "https://automotive.digitalrohtak.online"
+    },
+    {
+      "id": 7,
+      "icon": "🧘",
+      "label": "Ayush & Wellness",
+      "url": "https://ayush.digitalrohtak.online"
+    },
+    {
+      "id": 8,
+      "icon": "🍞",
+      "label": "Bakery",
+      "url": "https://bakery.digitalrohtak.online"
+    },
+    {
+      "id": 9,
+      "icon": "💄",
+      "label": "Beauty & Care",
+      "url": "https://beauty.digitalrohtak.online"
+    },
+    {
+      "id": 10,
+      "icon": "📖",
+      "label": "Books & Stationery",
+      "url": "https://books.digitalrohtak.online"
+    },
+    {
+      "id": 11,
+      "icon": "🧱",
+      "label": "Building Materials",
+      "url": "https://building.digitalrohtak.online"
+    },
+    {
+      "id": 12,
+      "icon": "🍱",
+      "label": "Catering",
+      "url": "https://catering.digitalrohtak.online"
+    },
+    {
+      "id": 13,
+      "icon": "📋",
+      "label": "Classifieds",
+      "url": "https://classifieds.digitalrohtak.online"
+    },
+    {
+      "id": 14,
+      "icon": "🧹",
+      "label": "Cleaning",
+      "url": "https://cleaning.digitalrohtak.online"
+    },
+    {
+      "id": 15,
+      "icon": "🎯",
+      "label": "Coaching",
+      "url": "https://coaching.digitalrohtak.online"
+    },
+    {
+      "id": 16,
+      "icon": "💻",
+      "label": "Computer Repair",
+      "url": "https://computerrepair.digitalrohtak.online"
+    },
+    {
+      "id": 17,
+      "icon": "📦",
+      "label": "Courier",
+      "url": "https://courier.digitalrohtak.online"
+    },
+    {
+      "id": 18,
+      "icon": "🥛",
+      "label": "Dairy",
+      "url": "https://dairy.digitalrohtak.online"
+    },
+    {
+      "id": 19,
+      "icon": "🚴",
+      "label": "Delivery",
+      "url": "https://delivery.digitalrohtak.online"
+    },
+    {
+      "id": 20,
+      "icon": "🦷",
+      "label": "Dentist",
+      "url": "https://dentist.digitalrohtak.online"
+    },
+    {
+      "id": 21,
+      "icon": "🚘",
+      "label": "Driving School",
+      "url": "https://driving.digitalrohtak.online"
+    },
+    {
+      "id": 22,
+      "icon": "🎓",
+      "label": "Education",
+      "url": "https://education.digitalrohtak.online"
+    },
+    {
+      "id": 23,
+      "icon": "⚡",
+      "label": "Electrician",
+      "url": "https://electrician.digitalrohtak.online"
+    },
+    {
+      "id": 24,
+      "icon": "📱",
+      "label": "Electronics",
+      "url": "https://electronics.digitalrohtak.online"
+    },
+    {
+      "id": 25,
+      "icon": "🎉",
+      "label": "Events",
+      "url": "https://events.digitalrohtak.online"
+    },
+    {
+      "id": 26,
+      "icon": "🎖️",
+      "label": "Ex-Servicemen",
+      "url": "https://exservicemen.digitalrohtak.online"
+    },
+    {
+      "id": 27,
+      "icon": "💰",
+      "label": "Finance",
+      "url": "https://finance.digitalrohtak.online"
+    },
+    {
+      "id": 28,
+      "icon": "🍕",
+      "label": "Food Delivery",
+      "url": "https://food.digitalrohtak.online"
+    },
+    {
+      "id": 29,
+      "icon": "🍎",
+      "label": "Fruits",
+      "url": "https://fruits.digitalrohtak.online"
+    },
+    {
+      "id": 30,
+      "icon": "🛋️",
+      "label": "Furniture",
+      "url": "https://furniture.digitalrohtak.online"
+    },
+    {
+      "id": 31,
+      "icon": "🌱",
+      "label": "Garden & Nursery",
+      "url": "https://garden.digitalrohtak.online"
+    },
+    {
+      "id": 32,
+      "icon": "🏛️",
+      "label": "Govt Services",
+      "url": "https://govt.digitalrohtak.online"
+    },
+    {
+      "id": 33,
+      "icon": "🏪",
+      "label": "Grocery",
+      "url": "https://grocery.digitalrohtak.online"
+    },
+    {
+      "id": 34,
+      "icon": "🏋️",
+      "label": "Gym",
+      "url": "https://gym.digitalrohtak.online"
+    },
+    {
+      "id": 35,
+      "icon": "🔩",
+      "label": "Hardware Store",
+      "url": "https://hardware.digitalrohtak.online"
+    },
+    {
+      "id": 36,
+      "icon": "🏥",
+      "label": "Health",
+      "url": "https://health.digitalrohtak.online"
+    },
+    {
+      "id": 37,
+      "icon": "🏠",
+      "label": "Home Appliances",
+      "url": "https://appliances.digitalrohtak.online"
+    },
+    {
+      "id": 38,
+      "icon": "🏨",
+      "label": "Hospital",
+      "url": "https://hospital.digitalrohtak.online"
+    },
+    {
+      "id": 39,
+      "icon": "🏩",
+      "label": "Hotel",
+      "url": "https://hotel.digitalrohtak.online"
+    },
+    {
+      "id": 40,
+      "icon": "📄",
+      "label": "Insurance",
+      "url": "https://insurance.digitalrohtak.online"
+    },
+    {
+      "id": 41,
+      "icon": "🖼️",
+      "label": "Interior Design",
+      "url": "https://interior.digitalrohtak.online"
+    },
+    {
+      "id": 42,
+      "icon": "🖥️",
+      "label": "IT Services",
+      "url": "https://it.digitalrohtak.online"
+    },
+    {
+      "id": 43,
+      "icon": "💍",
+      "label": "Jewelry",
+      "url": "https://jewelry.digitalrohtak.online"
+    },
+    {
+      "id": 44,
+      "icon": "💼",
+      "label": "Jobs",
+      "url": "https://jobs.digitalrohtak.online"
+    },
+    {
+      "id": 45,
+      "icon": "♻️",
+      "label": "Kabari",
+      "url": "https://kabari.digitalrohtak.online"
+    },
+    {
+      "id": 46,
+      "icon": "🍳",
+      "label": "Kitchen Equipment",
+      "url": "https://kitchen.digitalrohtak.online"
+    },
+    {
+      "id": 47,
+      "icon": "🔬",
+      "label": "Laboratory",
+      "url": "https://lab.digitalrohtak.online"
+    },
+    {
+      "id": 48,
+      "icon": "👕",
+      "label": "Laundry",
+      "url": "https://laundry.digitalrohtak.online"
+    },
+    {
+      "id": 49,
+      "icon": "⚖️",
+      "label": "Legal",
+      "url": "https://legal.digitalrohtak.online"
+    },
+    {
+      "id": 50,
+      "icon": "🧳",
+      "label": "Luggage & Bags",
+      "url": "https://luggage.digitalrohtak.online"
+    },
+    {
+      "id": 51,
+      "icon": "💊",
+      "label": "Medical Shops",
+      "url": "https://pharmacy.digitalrohtak.online"
+    },
+    {
+      "id": 52,
+      "icon": "📲",
+      "label": "Mobile Repair",
+      "url": "https://mobilerepair.digitalrohtak.online"
+    },
+    {
+      "id": 53,
+      "icon": "🎵",
+      "label": "Music",
+      "url": "https://music.digitalrohtak.online"
+    },
+    {
+      "id": 54,
+      "icon": "📰",
+      "label": "News",
+      "url": "https://news.digitalrohtak.online"
+    },
+    {
+      "id": 55,
+      "icon": "🤝",
+      "label": "NGOs",
+      "url": "https://ngo.digitalrohtak.online"
+    },
+    {
+      "id": 56,
+      "icon": "👓",
+      "label": "Optical",
+      "url": "https://optical.digitalrohtak.online"
+    },
+    {
+      "id": 57,
+      "icon": "🌾",
+      "label": "Organic",
+      "url": "https://organic.digitalrohtak.online"
+    },
+    {
+      "id": 58,
+      "icon": "🚛",
+      "label": "Packers & Movers",
+      "url": "https://movers.digitalrohtak.online"
+    },
+    {
+      "id": 59,
+      "icon": "🐛",
+      "label": "Pest Control",
+      "url": "https://pestcontrol.digitalrohtak.online"
+    },
+    {
+      "id": 60,
+      "icon": "⛽",
+      "label": "Petrol",
+      "url": "https://petrol.digitalrohtak.online"
+    },
+    {
+      "id": 61,
+      "icon": "🐾",
+      "label": "Pets",
+      "url": "https://pets.digitalrohtak.online"
+    },
+    {
+      "id": 62,
+      "icon": "📷",
+      "label": "Photography",
+      "url": "https://photography.digitalrohtak.online"
+    },
+    {
+      "id": 63,
+      "icon": "🚿",
+      "label": "Plumber",
+      "url": "https://plumber.digitalrohtak.online"
+    },
+    {
+      "id": 64,
+      "icon": "🖨️",
+      "label": "Printing",
+      "url": "https://printing.digitalrohtak.online"
+    },
+    {
+      "id": 65,
+      "icon": "🏡",
+      "label": "Property",
+      "url": "https://property.digitalrohtak.online"
+    },
+    {
+      "id": 66,
+      "icon": "🏠",
+      "label": "Real Estate",
+      "url": "https://realestate.digitalrohtak.online"
+    },
+    {
+      "id": 67,
+      "icon": "🛕",
+      "label": "Religious",
+      "url": "https://religious.digitalrohtak.online"
+    },
+    {
+      "id": 68,
+      "icon": "🔧",
+      "label": "Repair",
+      "url": "https://repair.digitalrohtak.online"
+    },
+    {
+      "id": 69,
+      "icon": "🍽️",
+      "label": "Restaurant",
+      "url": "https://restaurant.digitalrohtak.online"
+    },
+    {
+      "id": 70,
+      "icon": "🤲",
+      "label": "Sadahaq",
+      "url": "https://sadahaq.digitalrohtak.online"
+    },
+    {
+      "id": 71,
+      "icon": "💇",
+      "label": "Salon",
+      "url": "https://salon.digitalrohtak.online"
+    },
+    {
+      "id": 72,
+      "icon": "🛡️",
+      "label": "Security",
+      "url": "https://security.digitalrohtak.online"
+    },
+    {
+      "id": 73,
+      "icon": "🛒",
+      "label": "Shopping",
+      "url": "https://shopping.digitalrohtak.online"
+    },
+    {
+      "id": 74,
+      "icon": "🏏",
+      "label": "Sports",
+      "url": "https://sports.digitalrohtak.online"
+    },
+    {
+      "id": 75,
+      "icon": "✏️",
+      "label": "Stationery",
+      "url": "https://stationery.digitalrohtak.online"
+    },
+    {
+      "id": 76,
+      "icon": "🏬",
+      "label": "Supermarket",
+      "url": "https://supermarket.digitalrohtak.online"
+    },
+    {
+      "id": 77,
+      "icon": "🧵",
+      "label": "Tailoring",
+      "url": "https://tailoring.digitalrohtak.online"
+    },
+    {
+      "id": 78,
+      "icon": "✈️",
+      "label": "Tours & Travel",
+      "url": "https://travel.digitalrohtak.online"
+    },
+    {
+      "id": 79,
+      "icon": "🧸",
+      "label": "Toys",
+      "url": "https://toys.digitalrohtak.online"
+    },
+    {
+      "id": 80,
+      "icon": "🚌",
+      "label": "Transport",
+      "url": "https://transport.digitalrohtak.online"
+    },
+    {
+      "id": 81,
+      "icon": "📚",
+      "label": "Tutor",
+      "url": "https://tutor.digitalrohtak.online"
+    },
+    {
+      "id": 82,
+      "icon": "🥦",
+      "label": "Vegetables",
+      "url": "https://vegetables.digitalrohtak.online"
+    },
+    {
+      "id": 83,
+      "icon": "🐕",
+      "label": "Veterinary",
+      "url": "https://vet.digitalrohtak.online"
+    },
+    {
+      "id": 84,
+      "icon": "🙋",
+      "label": "Volunteers",
+      "url": "https://volunteers.digitalrohtak.online"
+    },
+    {
+      "id": 85,
+      "icon": "♻️",
+      "label": "Waste Mgmt",
+      "url": "https://waste.digitalrohtak.online"
+    },
+    {
+      "id": 86,
+      "icon": "💧",
+      "label": "Water Supply",
+      "url": "https://water.digitalrohtak.online"
+    },
+    {
+      "id": 87,
+      "icon": "💒",
+      "label": "Wedding",
+      "url": "https://wedding.digitalrohtak.online"
+    }
+  ],
+  "updatedAt": "2026-05-14T17:00:00.000Z"
+}

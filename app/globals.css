@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --saffron: #F47216;
+  --green: #00A650;
+  --white: #FFFFFF;
+}
+
+body {
+  background-color: #F47216;
+  color: #FFFFFF;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Loading animation */
+@keyframes pulse-green {
+  0%, 100% { color: #00A650; }
+  50% { color: #FFFFFF; }
+}
+
+.loading-text {
+  animation: pulse-green 1.2s ease-in-out infinite;
+}
+
+/* Fix: select dropdowns always show dark text regardless of container background */
+select {
+  color: #1a1a1a !important;
+  background-color: #ffffff;
+}
+
+select option {
+  color: #1a1a1a !important;
+  background-color: #ffffff;
+}
+
+/* Input and textarea text always dark on white bg */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea {
+  color: #1a1a1a;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #F47216; }
+::-webkit-scrollbar-thumb { background: #00A650; border-radius: 3px; }

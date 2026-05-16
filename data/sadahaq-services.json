@@ -1,0 +1,25 @@
+{
+  "services": [
+    { "id": 1,  "icon": "🏫", "label": "Schools",        "url": "/sadahaq/schools" },
+    { "id": 2,  "icon": "🤝", "label": "Volunteers",     "url": "/sadahaq/volunteers" },
+    { "id": 3,  "icon": "👨🏫","label": "Mentors",        "url": "/sadahaq/mentors" },
+    { "id": 4,  "icon": "🏢", "label": "NGOs",           "url": "/sadahaq/ngos" },
+    { "id": 5,  "icon": "📋", "label": "Grievances",     "url": "/sadahaq/grievances" },
+    { "id": 6,  "icon": "👥", "label": "Citizens",       "url": "/sadahaq/citizens" },
+    { "id": 7,  "icon": "🏥", "label": "Hospitals",      "url": "/sadahaq/hospitals" },
+    { "id": 8,  "icon": "💊", "label": "Medical Shops",  "url": "/sadahaq/medical-shops" },
+    { "id": 9,  "icon": "🏛️","label": "Govt Depts",     "url": "/sadahaq/govt-departments" },
+    { "id": 10, "icon": "🏭", "label": "Manufacturers",  "url": "/sadahaq/manufacturers" },
+    { "id": 11, "icon": "🏠", "label": "Properties",     "url": "/sadahaq/properties" },
+    { "id": 12, "icon": "📮", "label": "Postmen",        "url": "/sadahaq/postmen" },
+    { "id": 13, "icon": "👶", "label": "Anganwadi",      "url": "/sadahaq/anganwadi" },
+    { "id": 14, "icon": "🧘", "label": "Ayush Staff",    "url": "/sadahaq/ayush-staff" },
+    { "id": 15, "icon": "🎖️","label": "Ex-Servicemen",  "url": "/sadahaq/ex-servicemen" },
+    { "id": 16, "icon": "🎓", "label": "NSS Units",      "url": "/sadahaq/nss-units" },
+    { "id": 17, "icon": "🏘️","label": "Colonies",       "url": "/sadahaq/colonies" },
+    { "id": 18, "icon": "🔍", "label": "Surveillance",   "url": "/sadahaq/surveillance" },
+    { "id": 19, "icon": "👤", "label": "People",         "url": "/sadahaq/people" },
+    { "id": 20, "icon": "📊", "label": "Eagle View",     "url": "/sadahaq/eagle-view" }
+  ],
+  "updatedAt": "2026-05-03T00:00:00.000Z"
+}
