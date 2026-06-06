@@ -12,6 +12,9 @@ interface BannerItem {
 }
 
 export default function BannerSlideshow() {
+  // DISABLED: banners taking too much space on all pages
+  return null;
+
   const { editMode, isAdminUser } = useEditLayout();
   const { t } = useLang();
   const [banners, setBanners] = useState<BannerItem[]>([]);

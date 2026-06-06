@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Haryana Property Registry | DigitalRohtak</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--s:#FF9933;--g:#008000;--w:#fff;--bg:#FF9933}
+    body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--g)}
+
+    /* LOGIN */
+    .login-wrap{min-height:100vh;background:var(--s);display:flex;align-items:center;justify-content:center;padding:20px}
+    .login-card{background:#fff;border-radius:20px;padding:36px;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(0,0,0,.18);text-align:center}
+    .flag{display:flex;height:5px;border-radius:3px;overflow:hidden;margin-bottom:24px}
+    .flag .s{background:var(--s);flex:1}.flag .w{background:#ddd;flex:1}.flag .g{background:var(--g);flex:1}
+    .wheel{font-size:46px;margin-bottom:10px}
+    .login-title{font-size:1.6rem;font-weight:700;margin-bottom:4px;color:var(--g)}
+    .login-sub{font-size:.85rem;color:var(--g);margin-bottom:6px}
+    .login-loc{font-size:.78rem;color:var(--g);font-weight:600;margin-bottom:24px}
+    .lang-row{display:flex;justify-content:flex-end;margin-bottom:16px}
+    .lang-btn{background:none;border:2px solid var(--s);border-radius:8px;padding:4px 14px;cursor:pointer;font-weight:600;font-size:.82rem;color:var(--g)}
+    .lang-btn:hover{background:var(--s);color:#fff}
+    .field-label{display:block;text-align:left;font-size:.82rem;font-weight:600;color:var(--g);margin-bottom:6px}
+    .mob-row{display:flex;gap:8px;margin-bottom:16px}
+    .cc{padding:11px 12px;border:2px solid var(--s);border-radius:8px;font-size:.9rem;background:#fff8f0;font-weight:600;width:72px;text-align:center;color:var(--g)}
+    .finput{width:100%;padding:11px 14px;border:2px solid #ffd199;border-radius:8px;font-size:.95rem;outline:none;transition:border .2s;margin-bottom:10px;color:var(--g);background:#fff}
+    .finput:focus{border-color:var(--s);box-shadow:0 0 0 3px rgba(255,153,51,.15)}
+    .cont-btn{width:100%;padding:13px;background:var(--s);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer}
+    .cont-btn:hover{background:#e8851a}
+    .cont-btn:disabled{background:#ffd199;cursor:not-allowed}
+    .back-link{margin-top:10px;font-size:.75rem;color:var(--s);cursor:pointer}
+    .err{color:#c0392b;font-size:.8rem;margin-bottom:10px;text-align:left}
+    .hint{font-size:.75rem;color:var(--g);text-align:left;margin-bottom:14px;opacity:.8}
+
+    /* HEADER */
+    .header{background:var(--s);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(200,100,0,.3)}
+    .hflag{display:flex;height:4px}
+    .hflag .s{background:#ff7700;flex:1}.hflag .w{background:#fff;flex:1}.hflag .g{background:var(--g);flex:1}
+    .hcontent{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;flex-wrap:wrap;gap:8px}
+    .hlogo{display:flex;align-items:center;gap:10px}
+    .hwheel{width:36px;height:36px;border:2px solid rgba(255,255,255,.7);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:rgba(255,255,255,.2)}
+    .htitle{color:#fff;font-size:1.2rem;font-weight:700}
+    .hsub{color:rgba(255,255,255,.9);font-size:.7rem}
+    .hloc{color:rgba(255,255,255,.8);font-size:.66rem}
+    .hright{display:flex;align-items:center;gap:8px}
+    .hlang{background:#fff;color:var(--g);border:none;padding:4px 12px;border-radius:14px;font-size:.76rem;font-weight:700;cursor:pointer}
+    .hlang:hover{background:var(--g);color:#fff}
+    .huser{color:#fff;font-size:.8rem;font-weight:600}
+    .hlogout{background:var(--g);color:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:.72rem;cursor:pointer;font-weight:600}
+    .hlogout:hover{background:#006600}
+
+    /* NAV */
+    .nav{background:#e8851a;display:flex;gap:4px;padding:6px 24px;flex-wrap:wrap}
+    .nav a{color:#fff;text-decoration:none;font-size:.8rem;font-weight:600;padding:5px 14px;border-radius:14px;transition:background .2s}
+    .nav a:hover,.nav a.active{background:rgba(255,255,255,.25);color:#fff}
+
+    /* SEARCH SECTION */
+    .search-section{background:var(--s);border-bottom:3px solid var(--g);padding:20px 24px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .search-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:12px;max-width:1200px;margin:0 auto;align-items:end}
+    .search-field{display:flex;flex-direction:column;gap:6px}
+    .search-label{font-size:.76rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.4px}
+    .search-label .req{color:var(--g);margin-left:2px}
+    .sinput{padding:10px 14px;border:2px solid rgba(255,255,255,.5);border-radius:8px;font-size:.9rem;outline:none;transition:border .2s;width:100%;background:#fff;color:var(--g)}
+    .sinput:focus{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.3)}
+    .sinput.pid-input{border-color:#fff;background:#fff}
+    .search-btn{padding:11px 28px;background:var(--g);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .2s}
+    .search-btn:hover{background:#006600}
+    .search-btn:disabled{background:rgba(0,0,0,.2);cursor:not-allowed}
+    .clear-btn{padding:11px 16px;background:#fff;color:var(--g);border:none;border-radius:8px;font-size:.85rem;cursor:pointer;white-space:nowrap;font-weight:600}
+    .clear-btn:hover{background:#f0fff0}
+
+    /* MAIN */
+    .main{max-width:1200px;margin:0 auto;padding:24px}
+
+    /* EMPTY STATE */
+    .empty-state{text-align:center;padding:80px 20px}
+    .empty-icon{font-size:64px;margin-bottom:16px}
+    .empty-title{font-size:1.1rem;font-weight:600;color:#fff;margin-bottom:8px}
+    .empty-sub{font-size:.85rem;color:rgba(255,255,255,.8)}
+
+    /* PROPERTY CARD */
+    .prop-card{background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.12);overflow:hidden;border:2px solid var(--s)}
+    .card-header{background:var(--s);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .card-pid{background:rgba(255,255,255,.25);color:#fff;padding:6px 14px;border-radius:20px;font-size:.9rem;font-weight:700;letter-spacing:1px;border:1px solid rgba(255,255,255,.5)}
+    .card-type{background:var(--g);color:#fff;padding:5px 12px;border-radius:14px;font-size:.8rem;font-weight:600}
+    .card-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+    .card-img-section{padding:20px;display:flex;align-items:center;justify-content:center;background:#fff8f0;border-right:1px solid #ffe0b2}
+    .prop-img{width:100%;max-width:280px;border-radius:10px;object-fit:cover;box-shadow:0 2px 12px rgba(0,0,0,.1)}
+    .img-ph{width:200px;height:160px;background:#ffe0b2;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:48px;color:var(--s)}
+    .card-details{padding:24px;background:#fff}
+    .detail-row{display:flex;flex-direction:column;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #fff3e0}
+    .detail-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+    .detail-label{font-size:.72rem;font-weight:700;color:var(--s);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+    .detail-value{font-size:.95rem;color:var(--g);font-weight:500;word-break:break-word}
+    .detail-value.owner{font-size:1.1rem;font-weight:700;color:var(--g)}
+    .cert-yes{color:var(--g);font-weight:700;font-size:.9rem}
+    .cert-no{color:#ccc;font-size:.9rem}
+    .card-footer{padding:16px 24px;background:#fff8f0;border-top:1px solid #ffe0b2;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+    .area-badges{display:flex;gap:10px;flex-wrap:wrap}
+    .area-badge{background:#fff;border:2px solid var(--s);color:var(--g);padding:5px 12px;border-radius:8px;font-size:.8rem;font-weight:600}
+    .details-link{background:var(--g);color:#fff;padding:8px 18px;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:600}
+    .details-link:hover{background:#006600}
+
+    /* NO MATCH */
+    .no-match{background:#fff;border-radius:12px;padding:40px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.08);border:2px solid #ffe0b2}
+    .no-match-icon{font-size:48px;margin-bottom:12px}
+    .no-match-title{font-size:1rem;font-weight:600;color:#c0392b;margin-bottom:8px}
+    .no-match-sub{font-size:.85rem;color:var(--g)}
+
+    /* FOOTER */
+    .footer{text-align:center;padding:16px;font-size:.73rem;color:#fff;background:var(--g);margin-top:24px}
+
+    @media(max-width:900px){
+      .search-grid{grid-template-columns:1fr 1fr;gap:10px}
+      .card-body{grid-template-columns:1fr}
+      .card-img-section{border-right:none;border-bottom:1px solid #f0f0f0}
+    }
+    @media(max-width:600px){
+      .search-grid{grid-template-columns:1fr}
+      .hcontent{padding:10px 14px}
+      .main{padding:14px}
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const API = '';
+
+const T = {
+  en: {
+    title:'DigitalRohtak', sub:'Rohtak Properties', loc:'📍 Rohtak, Haryana, India ☸',
+    loginSub:'Enter your mobile number', mobPh:'10-digit mobile number', cont:'Continue →',
+    step2hint:'Enter Property ID (required) + any one more field to verify',
+    pidLabel:'Property ID', ownerLabel:'Owner Name', colonyLabel:'Colony Name', addrLabel:'Address',
+    required:'*', searchBtn:'Search Property', clearBtn:'Clear',
+    emptyTitle:'Search for a Property', emptySub:'Enter Property ID to get started',
+    noMatchTitle:'No matching property found', noMatchSub:'Please verify your Property ID and other details',
+    owner:'Owner Name', colony:'Colony', address:'Address', type:'Property Type',
+    area:'Plot Area', cert:'Self Certified', mobile:'Mobile', details:'View on ULB Portal',
+    yes:'✓ Yes', no:'— No', logout:'Logout',
+    f1:'Sadahaq Trust — Haryana Urban Local Bodies Property Registry | © SadahaqTrust'
+  },
+  hi: {
+    title:'डिजिटल रोहतक', sub:'रोहतक संपत्तियां', loc:'📍 रोहतक, हरियाणा, भारत ☸',
+    loginSub:'अपना मोबाइल नंबर दर्ज करें', mobPh:'10 अंकों का मोबाइल नंबर', cont:'जारी रखें →',
+    step2hint:'संपत्ति ID (अनिवार्य) + कोई एक और फ़ील्ड भरें',
+    pidLabel:'संपत्ति ID', ownerLabel:'मालिक का नाम', colonyLabel:'कॉलोनी का नाम', addrLabel:'पता',
+    required:'*', searchBtn:'संपत्ति खोजें', clearBtn:'साफ़ करें',
+    emptyTitle:'संपत्ति खोजें', emptySub:'शुरू करने के लिए संपत्ति ID दर्ज करें',
+    noMatchTitle:'कोई मिलान नहीं मिला', noMatchSub:'कृपया अपनी संपत्ति ID और अन्य विवरण जांचें',
+    owner:'मालिक', colony:'कॉलोनी', address:'पता', type:'संपत्ति प्रकार',
+    area:'भूखंड क्षेत्र', cert:'स्व-प्रमाणित', mobile:'मोबाइल', details:'ULB पोर्टल पर देखें',
+    yes:'✓ हाँ', no:'— नहीं', logout:'लॉगआउट',
+    f1:'सदाहक ट्रस्ट — हरियाणा नगर निकाय संपत्ति रजिस्ट्री | © सदाहकट्रस्ट'
+  }
+};
+
+function Login({onLogin, lang, setLang}) {
+  const [mob, setMob] = React.useState('');
+  const [step, setStep] = React.useState(1);
+  const [pid, setPid] = React.useState('');
+  const [owner, setOwner] = React.useState('');
+  const [colony, setColony] = React.useState('');
+  const [address, setAddress] = React.useState('');
+  const [verifying, setVerifying] = React.useState(false);
+  const [error, setError] = React.useState('');
+  const [colonies, setColonies] = React.useState([]);
+  const t = T[lang];
+
+  React.useEffect(()=>{
+    fetch('/api/colonies').then(r=>r.json()).then(res=>setColonies(res.colonies||[])).catch(()=>{});
+  },[]);
+
+  function checkMobile() {
+    if (mob.length < 10) return;
+    fetch('/api/register-mobile',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({mobile:'+91'+mob})
+    }).then(r=>r.json()).then(res=>{
+      if (res.existing) {
+        const u={mobile:'+91'+mob,pid:res.existing.pid||'',verified:true,returning:true,intent:res.existing.intent,role:res.existing.role};
+        localStorage.setItem('dr_user',JSON.stringify(u));
+        onLogin(u);
+      } else {
+        setStep(2);
+      }
+    }).catch(()=>setStep(2));
+  }
+
+  function verify() {
+    if (!pid.trim()) { setError(lang==='en'?'Property ID is required':'संपत्ति ID अनिवार्य है'); return; }
+    const extras = [owner, colony, address].filter(v => v.trim().length > 0);
+    if (extras.length < 1) { setError(lang==='en'?'Please fill at least one more field':'कृपया कम से कम एक और फ़ील्ड भरें'); return; }
+    setVerifying(true); setError('');
+    fetch('/api/verify-property', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({pid: pid.trim(), owner_name: owner, colony, address})
+    }).then(r=>r.json()).then(res => {
+      if (res.verified) {
+        const u = {mobile:'+91'+mob, pid: res.record.pid, verified:true};
+        localStorage.setItem('dr_user', JSON.stringify(u));
+        onLogin(u);
+      } else {
+        setError(lang==='en'?'Property not found or details do not match':'संपत्ति नहीं मिली या विवरण मेल नहीं खाते');
+      }
+    }).catch(()=>setError('Server error')).finally(()=>setVerifying(false));
+  }
+
+  return (
+    <div className="login-wrap">
+      <div className="login-card">
+        <div className="flag"><div className="s"/><div className="w"/><div className="g"/></div>
+        <div className="lang-row">
+          <button className="lang-btn" onClick={()=>setLang(lang==='en'?'hi':'en')}>
+            {lang==='en'?'हिंदी':'English'}
+          </button>
+        </div>
+        <div className="wheel">☸</div>
+        <div className="login-title">{t.title}</div>
+        <div className="login-sub">{t.sub}</div>
+        <div className="login-loc">{t.loc}</div>
+
+        {step===1 && (
+          <>
+            <label className="field-label">📱 {lang==='en'?'Mobile Number':'मोबाइल नंबर'}</label>
+            <div className="mob-row">
+              <div className="cc">🇮🇳 +91</div>
+              <input className="finput" style={{marginBottom:0}} type="tel" maxLength={10}
+                placeholder={t.mobPh} value={mob}
+                onChange={e=>setMob(e.target.value.replace(/\D/g,''))}
+                onKeyDown={e=>e.key==='Enter'&&mob.length===10&&checkMobile()} autoFocus/>
+            </div>
+            <button className="cont-btn" style={{marginTop:6}} onClick={checkMobile} disabled={mob.length<10}>{t.cont}</button>
+          </>
+        )}
+
+        {step===2 && (
+          <>
+            <div className="hint">🔐 {t.step2hint}</div>
+            <label className="field-label">{t.pidLabel} <span style={{color:'var(--s)'}}>*</span></label>
+            <input className="finput" placeholder={t.pidLabel} value={pid} onChange={e=>setPid(e.target.value)} autoFocus/>
+            <label className="field-label">{t.ownerLabel} <span style={{color:'#ccc',fontSize:'.72rem'}}>{lang==='en'?'(optional if NA)':'(वैकल्पिक)'}</span></label>
+            <input className="finput" placeholder={t.ownerLabel} value={owner} onChange={e=>setOwner(e.target.value)}/>
+            <label className="field-label">{t.colonyLabel}</label>
+            <select className="finput" value={colony} onChange={e=>setColony(e.target.value)}>
+              <option value="">{lang==='en'?'Select Colony':'कॉलोनी चुनें'}</option>
+              {colonies.map(c=><option key={c} value={c}>{c}</option>)}
+            </select>
+            <label className="field-label">{t.addrLabel}</label>
+            <input className="finput" placeholder={t.addrLabel} value={address} onChange={e=>setAddress(e.target.value)}/>
+            {error && <div className="err">⚠️ {error}</div>}
+            <button className="cont-btn" onClick={verify} disabled={verifying}>
+              {verifying?'...':(lang==='en'?'Verify & Enter →':'सत्यापित करें →')}
+            </button>
+            <div className="back-link" onClick={()=>setStep(1)}>← {lang==='en'?'Back':'वापस'}</div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PropertyCard({record, t}) {
+  return (
+    <div className="prop-card">
+      <div className="card-header">
+        <div>
+          <div style={{color:'rgba(255,255,255,.85)',fontSize:'.72rem',marginBottom:4,fontWeight:600,letterSpacing:'.5px'}}>PROPERTY ID</div>
+          <div className="card-pid">{(record.pid||'').toUpperCase()}</div>
+        </div>
+        <div className="card-type">{record.property_type||'—'}</div>
+      </div>
+
+      <div className="card-body">
+        <div className="card-img-section">
+          {record.image_url
+            ? <img src={record.image_url.trim()} className="prop-img" alt="" onError={e=>e.target.style.display='none'}/>
+            : <div className="img-ph">🏠</div>
+          }
+        </div>
+        <div className="card-details">
+          <div className="detail-row">
+            <div className="detail-label">{t.owner}</div>
+            <div className="detail-value owner">{record.owner_name||'—'}</div>
+          </div>
+          <div className="detail-row">
+            <div className="detail-label">{t.colony}</div>
+            <div className="detail-value">{record.colony||'—'}</div>
+          </div>
+          <div className="detail-row">
+            <div className="detail-label">{t.address}</div>
+            <div className="detail-value">{record.address||'—'}</div>
+          </div>
+          <div className="detail-row">
+            <div className="detail-label">{t.cert}</div>
+            <div className="detail-value">
+              {record.is_self_certified==='TRUE'
+                ? <span className="cert-yes">{t.yes}</span>
+                : <span className="cert-no">{t.no}</span>
+              }
+              {record.self_cert_mobile_masked && <span style={{marginLeft:10,color:'var(--s)',fontSize:'.85rem'}}>📱 {record.self_cert_mobile_masked}</span>}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="card-footer">
+        <div className="area-badges">
+          {record.plot_area_sq_yard && <span className="area-badge">📐 {record.plot_area_sq_yard}</span>}
+          {record.plot_area_sq_meter && <span className="area-badge">📏 {record.plot_area_sq_meter}</span>}
+        </div>
+        {record.details_url && <a href={record.details_url} target="_blank" className="details-link">🔗 {t.details}</a>}
+      </div>
+    </div>
+  );
+}
+
+function IntentSelector({lang, onDone}) {
+  const [tab, setTab] = React.useState('sell'); // 'sell' or 'rent'
+  const [choice, setChoice] = React.useState('');
+
+  const tabs = [
+    {id:'sell', label: lang==='en'?'Sell / Buy':'बेचना / खरीदना', icon:'🤝'},
+    {id:'rent', label: lang==='en'?'Rent / Lease':'किराया / पट्टा', icon:'🏠'}
+  ];
+
+  const options = {
+    sell: [
+      {value:'sell', role:'seller', label: lang==='en'?'Sell':'बेचना', sub: lang==='en'?'I want to sell my property':'मैं अपनी संपत्ति बेचना चाहता/चाहती हूं', icon:'🏠'},
+      {value:'buy',  role:'buyer',  label: lang==='en'?'Buy':'खरीदना',  sub: lang==='en'?'I want to buy a property':'मैं संपत्ति खरीदना चाहता/चाहती हूं', icon:'👥'}
+    ],
+    rent: [
+      {value:'rent',  role:'tenant', label: lang==='en'?'Rent':'किराया',  sub: lang==='en'?'I want to take on rent':'मैं किराए पर लेना चाहता/चाहती हूं', icon:'🔑'},
+      {value:'lease', role:'owner',  label: lang==='en'?'Lease':'पट्टा',  sub: lang==='en'?'I want to give on lease':'मैं पट्टे पर देना चाहता/चाहती हूं', icon:'📝'}
+    ]
+  };
+
+  function handleDone() {
+    if (!choice) return;
+    const opt = options[tab].find(o=>o.value===choice);
+    onDone(choice, opt.role);
+  }
+
+  return (
+    <div>
+      {/* TABS */}
+      <div style={{display:'flex',borderRadius:10,overflow:'hidden',border:'2px solid #e0e0e0',marginBottom:20}}>
+        {tabs.map(t=>(
+          <button key={t.id} onClick={()=>{setTab(t.id);setChoice('');}} style={{
+            flex:1,padding:'12px 8px',border:'none',cursor:'pointer',fontWeight:700,fontSize:'.9rem',
+            background:tab===t.id?(t.id==='sell'?'var(--s)':'var(--g)'):'#fff8f0',
+            color:tab===t.id?'#fff':'var(--g)',transition:'all .2s'
+          }}>
+            {t.icon} {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* RADIO OPTIONS */}
+      <div style={{display:'flex',flexDirection:'column',gap:12,marginBottom:20}}>
+        {options[tab].map(opt=>(
+          <label key={opt.value} onClick={()=>setChoice(opt.value)} style={{
+            display:'flex',alignItems:'center',gap:14,padding:'16px',
+            border:`2px solid ${choice===opt.value?(tab==='sell'?'var(--s)':'var(--g)'):'#ffd199'}`,
+            borderRadius:10,cursor:'pointer',background:choice===opt.value?(tab==='sell'?'#fff8f0':'#f0fff0'):'#fff',
+            transition:'all .2s'
+          }}>
+            <div style={{
+              width:22,height:22,borderRadius:'50%',border:`2px solid ${choice===opt.value?(tab==='sell'?'var(--s)':'var(--g)'):'#ccc'}`,
+              display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0
+            }}>
+              {choice===opt.value && <div style={{width:12,height:12,borderRadius:'50%',background:tab==='sell'?'var(--s)':'var(--g)'}}/>}
+            </div>
+            <div style={{fontSize:24}}>{opt.icon}</div>
+            <div style={{textAlign:'left'}}>
+              <div style={{fontWeight:700,fontSize:'1rem',color:'var(--g)'}}>{opt.label}</div>
+              <div style={{fontSize:'.78rem',color:'var(--s)',marginTop:2}}>{opt.sub}</div>
+            </div>
+          </label>
+        ))}
+      </div>
+
+      <button className="cont-btn" onClick={handleDone} disabled={!choice}
+        style={{background:tab==='sell'?'var(--s)':'var(--g)'}}>
+        {lang==='en'?'Continue →':'जारी रखें →'}
+      </button>
+    </div>
+  );
+}
+
+function App() {
+  const [lang, setLang] = React.useState('en');
+  const [user, setUser] = React.useState(()=>{ try{return JSON.parse(localStorage.getItem('dr_user'));}catch{return null;} });
+  const [intent, setIntent] = React.useState(null); // null=not selected, 'rent', 'sell'
+  const [pid, setPid] = React.useState('');
+  const [owner, setOwner] = React.useState('');
+  const [colony, setColony] = React.useState('');
+  const [address, setAddress] = React.useState('');
+  const [result, setResult] = React.useState(null);
+  const [searching, setSearching] = React.useState(false);
+  const [colonies, setColonies] = React.useState([]);
+  const t = T[lang];
+
+  React.useEffect(()=>{
+    if (!user) return;
+    fetch('/api/colonies').then(r=>r.json()).then(res=>setColonies(res.colonies||[])).catch(()=>{});
+  },[user]);
+
+  if (!user) return <Login onLogin={setUser} lang={lang} setLang={setLang}/>;
+
+  if (!intent) return (
+    <div className="login-wrap">
+      <div className="login-card" style={{maxWidth:460}}>
+        <div className="flag"><div className="s"/><div className="w"/><div className="g"/></div>
+        <div className="lang-row">
+          <button className="lang-btn" onClick={()=>setLang(lang==='en'?'hi':'en')}>{lang==='en'?'हिंदी':'English'}</button>
+        </div>
+        <div className="wheel">☸</div>
+        <div className="login-title">{t.title}</div>
+        <div className="login-sub" style={{marginBottom:20,color:'var(--g)'}}>{lang==='en'?'What are you looking for?':'आप क्या खोज रहे हैं?'}</div>
+
+        <IntentSelector lang={lang} mobile={user.mobile} pid={user.pid} onDone={(i,r)=>{
+          setIntent(i);
+          fetch('/api/save-session',{method:'POST',headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({mobile:user.mobile,pid:user.pid||'',intent:i,role:r})});
+        }}/>
+
+        <div style={{marginTop:16,fontSize:'.75rem',color:'var(--s)',cursor:'pointer',fontWeight:600}} onClick={()=>{localStorage.removeItem('dr_user');setUser(null);}}>← {lang==='en'?'Logout':'लॉगआउट'}</div>
+      </div>
+    </div>
+  );
+
+  function search() {
+    if (!pid.trim()) return;
+    setSearching(true);
+    fetch('/api/verify-property', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({pid: pid.trim(), owner_name: owner, colony, address})
+    }).then(r=>r.json()).then(res=>{
+      setResult(res.verified ? res.record : false);
+    }).catch(()=>setResult(false)).finally(()=>setSearching(false));
+  }
+
+  function clear() { setPid(''); setOwner(''); setColony(''); setAddress(''); setResult(null); }
+
+  return (
+    <div>
+      <header className="header">
+        <div className="hflag"><div className="s"/><div className="w"/><div className="g"/></div>
+        <div className="hcontent">
+          <div className="hlogo">
+            <div className="hwheel">☸</div>
+            <div>
+              <div className="htitle">{t.title}</div>
+              <div className="hsub">{t.sub}</div>
+              <div className="hloc">{t.loc}</div>
+            </div>
+          </div>
+          <div className="hright">
+            <button className="hlang" onClick={()=>setLang(lang==='en'?'hi':'en')}>
+              {lang==='en'?'हिंदी':'English'}
+            </button>
+            <span className="huser">📱 {user.mobile}</span>
+            <span style={{background:'rgba(255,255,255,.25)',color:'#fff',padding:'4px 10px',borderRadius:12,fontSize:'.75rem',fontWeight:600,cursor:'pointer',border:'1px solid rgba(255,255,255,.4)'}} onClick={()=>setIntent(null)}>
+              {intent==='rent'?(lang==='en'?'🏠 Rent/Lease':'🏠 किराया'):(lang==='en'?'🤝 Sell/Buy':'🤝 बेचना')} ✕
+            </span>
+            <button className="hlogout" onClick={()=>{localStorage.removeItem('dr_user');setUser(null);}}>{t.logout}</button>
+          </div>
+        </div>
+      </header>
+
+      <nav className="nav">
+        <a href="#" className="active">{lang==='en'?'🔍 Search':'🔍 खोजें'}</a>
+        <a href="#">{lang==='en'?'🏘️ Properties':'🏘️ संपत्तियां'}</a>
+        <a href="#">{lang==='en'?'ℹ️ About':'ℹ️ हमारे बारे में'}</a>
+        <a href="#">{lang==='en'?'📞 Contact':'📞 संपर्क'}</a>
+      </nav>
+
+      <div className="search-section">
+        <div className="search-grid">
+          <div className="search-field">
+            <label className="search-label">{t.pidLabel} <span className="req">{t.required}</span></label>
+            <input className="sinput pid-input" placeholder={t.pidLabel} value={pid} onChange={e=>setPid(e.target.value)} onKeyDown={e=>e.key==='Enter'&&search()}/>
+          </div>
+          <div className="search-field">
+            <label className="search-label">{t.ownerLabel}</label>
+            <input className="sinput" placeholder={t.ownerLabel} value={owner} onChange={e=>setOwner(e.target.value)} onKeyDown={e=>e.key==='Enter'&&search()}/>
+          </div>
+          <div className="search-field">
+            <label className="search-label">{t.colonyLabel}</label>
+            <select className="sinput" value={colony} onChange={e=>setColony(e.target.value)}>
+              <option value="">{lang==='en'?'Select Colony':'कॉलोनी चुनें'}</option>
+              {colonies.map(c=><option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div className="search-field">
+            <label className="search-label">{t.addrLabel}</label>
+            <input className="sinput" placeholder={t.addrLabel} value={address} onChange={e=>setAddress(e.target.value)} onKeyDown={e=>e.key==='Enter'&&search()}/>
+          </div>
+          <div style={{display:'flex',gap:8}}>
+            <button className="search-btn" onClick={search} disabled={!pid.trim()||searching}>
+              {searching?'...':t.searchBtn}
+            </button>
+            <button className="clear-btn" onClick={clear}>{t.clearBtn}</button>
+          </div>
+        </div>
+      </div>
+
+      <main className="main">
+        {result === null && (
+          <div className="empty-state">
+            <div className="empty-icon">🏘️</div>
+            <div className="empty-title">{t.emptyTitle}</div>
+            <div className="empty-sub">{t.emptySub}</div>
+          </div>
+        )}
+        {result === false && (
+          <div className="no-match">
+            <div className="no-match-icon">🔍</div>
+            <div className="no-match-title">{t.noMatchTitle}</div>
+            <div className="no-match-sub">{t.noMatchSub}</div>
+          </div>
+        )}
+        {result && result.pid && <PropertyCard record={result} t={t}/>}
+      </main>
+
+      <footer className="footer">
+        <p>{t.f1}</p>
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

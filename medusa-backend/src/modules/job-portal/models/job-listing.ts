@@ -1,0 +1,25 @@
+import { model } from "@medusajs/framework/utils"
+
+export const JobListing = model.define("job_listing", {
+  id: model.id().primaryKey(),
+  employer_id: model.text(),
+  title: model.text(),
+  description: model.text().nullable(),
+  requirements: model.text().nullable(),
+  location: model.text().nullable(),
+  city: model.text().default("Rohtak"),
+  state: model.text().default("Haryana"),
+  salary_min: model.number().nullable(),
+  salary_max: model.number().nullable(),
+  experience_min: model.number().default(0),
+  experience_max: model.number().nullable(),
+  job_type: model.text().default("full-time"),
+  skills_required: model.text().nullable(),
+  industry: model.text().nullable(),
+  vacancies: model.number().default(1),
+  is_active: model.boolean().default(true),
+  posted_at: model.dateTime().nullable(),
+  expires_at: model.dateTime().nullable(),
+  views_count: model.number().default(0),
+  applications_count: model.number().default(0),
+})

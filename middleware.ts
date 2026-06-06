@@ -109,6 +109,7 @@ const DEDICATED_ROUTES: Record<string, string> = {
   shopping: "/shopping",
   pgdb: "/pgdb",
   food: "/food",
+  fruits: "/fruits",
   professionalservices: "/professionalservices",
 };
 
