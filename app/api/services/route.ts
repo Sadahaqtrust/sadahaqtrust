@@ -32,7 +32,7 @@ server {
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
     location / {
-        proxy_pass http://127.0.0.1:${port};
+        proxy_pass http://${process.env.SERVICE_HOST || "127.0.0.1"}:${port};
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
 
     // 4. Audit log (fire and forget)
     logAudit(req, "SERVICE_GRID_SAVE", { serviceCount: services?.length || 0 });
-    fetch(`http://127.0.0.1:3000/api/ping-google`, { method: "POST" }).catch(() => {});
+    fetch(`/api/ping-google`, { method: "POST" }).catch(() => {});
 
     return NextResponse.json({ success: true, message: "Saved and nginx reloaded" });
   } catch (err: any) {

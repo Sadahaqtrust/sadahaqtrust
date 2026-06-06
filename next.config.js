@@ -8,8 +8,15 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: "20mb",
+      bodySizeLimit: "100mb",
     },
+  },
+  // Allow large file uploads on API routes
+  api: {
+    bodyParser: {
+      sizeLimit: "100mb",
+    },
+    responseLimit: "100mb",
   },
 };
 

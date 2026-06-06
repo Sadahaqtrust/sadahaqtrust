@@ -39,14 +39,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
         <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png" />
       </head>
-      <body className="min-h-screen flex flex-col bg-[#F47216]">
+      <body className="min-h-screen bg-[#F47216]">
         <AuthProvider>
           <LangProvider>
             <EditLayout>
-              <Navbar />
-              <BannerSlideshow />
-              <main className="flex-1">{children}</main>
-              <Footer />
+              {/* Mobile-only frame — locks entire platform to 480px max width */}
+              <div className="mx-auto bg-[#F47216] min-h-screen flex flex-col shadow-2xl" style={{ maxWidth: "480px" }}>
+                <Navbar />
+                <BannerSlideshow />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
             </EditLayout>
           </LangProvider>
         </AuthProvider>

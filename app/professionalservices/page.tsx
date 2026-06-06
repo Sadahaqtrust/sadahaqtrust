@@ -5,6 +5,36 @@ import Link from "next/link"
 const MEDUSA_URL = process.env.NEXT_PUBLIC_MEDUSA_URL || "https://api.digitalrohtak.online"
 const PK = process.env.NEXT_PUBLIC_PUBLISHABLE_KEY || ""
 
+// Subdomain → category_id mapping (detect which service subdomain we're on)
+const SUBDOMAIN_CAT: Record<string, string> = {
+  advocate: "cat_lawyer", lawyer: "cat_lawyer", legal: "cat_lawyer",
+  ca: "cat_ca", accountant: "cat_ca", cs: "cat_cs",
+  property: "cat_property", realestate: "cat_property",
+  insurance: "cat_insurance", architect: "cat_architect",
+  interior: "cat_interior", notary: "cat_notary", hr: "cat_hr",
+  civilengineer: "cat_civil_eng", tax: "cat_tax_consultant",
+  gst: "cat_gst_consultant", finance: "cat_financial_planner",
+  stockadvisor: "cat_stock_advisor", loan: "cat_loan_agent",
+  mutualfund: "cat_mutual_fund", surveyor: "cat_surveyor",
+  valuer: "cat_valuer", townplanner: "cat_town_planner",
+  structural: "cat_structural_eng", mep: "cat_mep_eng",
+  landscape: "cat_landscape", vastu: "cat_vastu",
+  immigration: "cat_immigration", visa: "cat_visa_agent",
+  passport: "cat_passport_agent", detective: "cat_detective",
+  security: "cat_security_guard", eventmanagement: "cat_event_mgmt",
+  electrician: "cat_electrician", plumber: "cat_plumber",
+  carpenter: "cat_carpenter", painter: "cat_painter",
+  cleaning: "cat_cleaning", pestcontrol: "cat_pest",
+  salon: "cat_womens_salon", beauty: "cat_womens_salon",
+  gym: "cat_fitness", yoga: "cat_yoga",
+  tutor: "cat_tutor_6_10", coaching: "cat_coaching",
+  photography: "cat_photo", catering: "cat_caterer",
+  dentist: "cat_dentist", vet: "cat_vet",
+  pharmacy: "cat_doctor", health: "cat_doctor", hospital: "cat_doctor",
+  driving: "cat_driving", music: "cat_music",
+  laundry: "cat_laundry", tailoring: "cat_tailor", movers: "cat_packers",
+}
+
 type Provider = {
   id: string
   full_name: string
@@ -25,20 +55,46 @@ export default function ProfessionalServicesPage() {
   const [subcats, setSubcats] = useState<Subcat[]>([])
   const [selectedCat, setSelectedCat] = useState("")
   const [loading, setLoading] = useState(true)
+  const [subdomainMode, setSubdomainMode] = useState(false)
+  const [serviceName, setServiceName] = useState("Professional Service Providers")
+
+  // Detect subdomain and auto-select category
+  useEffect(() => {
+    const host = window.location.hostname
+    if (host.endsWith(".digitalrohtak.online") && host !== "professionalservices.digitalrohtak.online") {
+      const sub = host.split(".")[0]
+      const catId = SUBDOMAIN_CAT[sub]
+      if (catId) {
+        setSelectedCat(catId)
+        setSubdomainMode(true)
+        setServiceName(sub.charAt(0).toUpperCase() + sub.slice(1) + " Services")
+      }
+    }
+  }, [])
 
   useEffect(() => {
     fetch(`${MEDUSA_URL}/store/service-categories`, { headers: { "x-publishable-api-key": PK } })
       .then(r => r.json())
       .then(d => {
+        // Load ALL subcategories from all parent categories for service subdomains
+        const allSubs: Subcat[] = []
+        for (const cat of (d.categories || [])) {
+          allSubs.push(...(cat.subcategories || []))
+        }
         const prof = d.categories?.find((c: any) => c.id === "cat_professional")
         setSubcats(prof?.subcategories || [])
+        // If subdomain mode, update service name from category data
+        if (subdomainMode && selectedCat) {
+          const found = allSubs.find((s: any) => s.id === selectedCat)
+          if (found) setServiceName(found.name)
+        }
       })
-  }, [])
+  }, [subdomainMode, selectedCat])
 
   useEffect(() => {
     setLoading(true)
+    // In subdomain mode, filter by specific category; otherwise show all professional
     const catId = selectedCat || "cat_professional"
-    // all=true returns verified + non-verified both
     fetch(`${MEDUSA_URL}/store/providers?category_id=${catId}&all=true`, { headers: { "x-publishable-api-key": PK } })
       .then(r => r.json())
       .then(d => { setProviders(d.providers || []); setLoading(false) })
@@ -54,32 +110,34 @@ export default function ProfessionalServicesPage() {
           className="absolute top-3 right-3 md:top-4 md:right-4 bg-white text-[#F47216] px-3 md:px-4 py-1.5 md:py-2 rounded-xl font-extrabold text-[11px] md:text-xs shadow-md hover:bg-[#00A650] hover:text-white transition-all flex items-center gap-1"
         >
           <span className="text-sm md:text-base leading-none">＋</span>
-          <span className="whitespace-nowrap">Register as Professional</span>
+          <span className="whitespace-nowrap">Register as Provider</span>
         </Link>
         <div className="max-w-2xl mx-auto text-center pt-4 md:pt-2">
           <div className="text-4xl mb-1">🏛️</div>
-          <h1 className="text-2xl font-extrabold text-white mb-1">Professional Service Providers</h1>
-          <p className="text-white/80 text-sm">Lawyers, CAs, Architects & more in Rohtak</p>
+          <h1 className="text-2xl font-extrabold text-white mb-1">{serviceName}</h1>
+          <p className="text-white/80 text-sm">{subdomainMode ? `Find ${serviceName} in Rohtak` : "Lawyers, CAs, Architects & more in Rohtak"}</p>
         </div>
       </div>
 
-      {/* Category filter chips */}
-      <div className="max-w-2xl mx-auto px-4 mt-4">
-        <div className="bg-white rounded-2xl shadow-lg p-3 flex gap-2 overflow-x-auto">
-          <button
-            onClick={() => setSelectedCat("")}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${!selectedCat ? "bg-[#F47216] text-white" : "bg-gray-100 text-gray-600 hover:bg-orange-50"}`}>
-            All
-          </button>
-          {subcats.map(s => (
-            <button key={s.id}
-              onClick={() => setSelectedCat(s.id)}
-              className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${selectedCat === s.id ? "bg-[#F47216] text-white" : "bg-gray-100 text-gray-600 hover:bg-orange-50"}`}>
-              {s.name}
+      {/* Category filter chips — hidden in subdomain mode (already filtered) */}
+      {!subdomainMode && (
+        <div className="max-w-2xl mx-auto px-4 mt-4">
+          <div className="bg-white rounded-2xl shadow-lg p-3 flex gap-2 overflow-x-auto">
+            <button
+              onClick={() => setSelectedCat("")}
+              className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${!selectedCat ? "bg-[#F47216] text-white" : "bg-gray-100 text-gray-600 hover:bg-orange-50"}`}>
+              All
             </button>
-          ))}
+            {subcats.map(s => (
+              <button key={s.id}
+                onClick={() => setSelectedCat(s.id)}
+                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${selectedCat === s.id ? "bg-[#F47216] text-white" : "bg-gray-100 text-gray-600 hover:bg-orange-50"}`}>
+                {s.name}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Provider list */}
       <div className="max-w-2xl mx-auto px-4 mt-6 pb-10">

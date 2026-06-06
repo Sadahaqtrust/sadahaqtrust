@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { logAudit } from "@/lib/auditLog";
 
-const MEDUSA_URL = process.env.NEXT_PUBLIC_MEDUSA_URL || "http://localhost:9000";
+const MEDUSA_URL = process.env.NEXT_PUBLIC_MEDUSA_URL || "https://api.digitalrohtak.online";
 const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_PUBLISHABLE_KEY || "pk_43aa7dc425d977cdfa688fb7807f0fb38ddc398dac56b7f84341399918d666c8";
 
 export async function GET(req: NextRequest) {

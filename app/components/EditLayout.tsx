@@ -9,8 +9,15 @@ import { useRouter, usePathname } from "next/navigation";
 interface EditLayoutContextType {
   editMode: boolean;
   isAdminUser: boolean;
+  showAdmin: boolean;
+  toggleEditMode: () => void;
 }
-const EditLayoutContext = createContext<EditLayoutContextType>({ editMode: false, isAdminUser: false });
+const EditLayoutContext = createContext<EditLayoutContextType>({
+  editMode: false,
+  isAdminUser: false,
+  showAdmin: false,
+  toggleEditMode: () => {},
+});
 export function useEditLayout() { return useContext(EditLayoutContext); }
 
 // ── Draggable item wrapper
@@ -124,6 +131,10 @@ export default function EditLayout({
     if (customer?.email) {
       try { localStorage.setItem('dr_customer_email', customer.email); } catch {}
       if (isAdmin(customer.email)) setCookieAdmin(true);
+    } else {
+      // Customer logged out — clear admin state
+      setCookieAdmin(false);
+      setEditMode(false);
     }
   }, [customer?.email]);
 
@@ -176,46 +187,12 @@ export default function EditLayout({
   }
 
   return (
-    <EditLayoutContext.Provider value={{ editMode, isAdminUser: adminUser || cookieAdmin }}>
+    <EditLayoutContext.Provider value={{ editMode, isAdminUser: adminUser || cookieAdmin, showAdmin, toggleEditMode: handleEditToggle }}>
       {toast && (
         <div className="fixed top-20 right-4 bg-[#00A650] text-white px-6 py-3 rounded-xl shadow-xl z-[200] font-semibold">
           {toast}
         </div>
       )}
-
-      {showAdmin && (
-        <div className="fixed bottom-4 right-4 z-[150] flex flex-col gap-2 items-end">
-          {editMode ? (
-            <>
-              {onSave && (
-                <button onClick={handleSave} disabled={saving}
-                  className="bg-[#F47216] text-white px-5 py-2 rounded-xl font-bold shadow-xl hover:bg-white hover:text-[#F47216] border-2 border-[#F47216] transition-all disabled:opacity-60">
-                  {saving ? "Saving..." : "💾 Save & Apply"}
-                </button>
-              )}
-              <button onClick={handleEditToggle}
-                className="bg-white text-[#00A650] px-5 py-2 rounded-xl font-bold shadow-xl border-2 border-[#00A650] transition-all">
-                ✅ Done Editing
-              </button>
-            </>
-          ) : (
-            <>
-              {/* Edit Services — independent on every page */}
-              <button onClick={() => router.push("/edit-services")}
-                className="bg-[#F47216] text-white px-5 py-2 rounded-xl font-bold shadow-xl border-2 border-[#F47216] hover:bg-white hover:text-[#F47216] transition-all text-sm">
-                🛠️ Edit Services
-              </button>
-              {/* Edit Layout (banners) — independent on every page */}
-              <button onClick={handleEditToggle}
-                className="bg-[#00A650] text-white px-5 py-2 rounded-xl font-bold shadow-xl border-2 border-[#00A650] hover:bg-white hover:text-[#00A650] transition-all">
-                🖼️ Edit Banners
-              </button>
-            </>
-          )}
-          <span className="text-white/60 text-xs text-right">Admin Mode</span>
-        </div>
-      )}
-
       {children}
     </EditLayoutContext.Provider>
   );

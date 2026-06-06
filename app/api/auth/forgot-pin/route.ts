@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if customer exists in Medusa
-    const MEDUSA_URL = process.env.MEDUSA_INTERNAL_URL || "http://127.0.0.1:9000";
+    const MEDUSA_URL = process.env.MEDUSA_INTERNAL_URL || "https://api.digitalrohtak.online";
     const checkRes = await fetch(`${MEDUSA_URL}/auth/customer/emailpass`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

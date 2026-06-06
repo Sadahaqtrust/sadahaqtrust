@@ -7,7 +7,7 @@ const pools: Record<string, Pool> = {};
 function getPool(db: string): Pool {
   if (!pools[db]) {
     pools[db] = new Pool({
-      host: "localhost",
+      host: process.env.DATABASE_HOST || "localhost",
       port: 5432,
       user: "medusa_user",
       password: "Saanvi02052016@",

@@ -15,7 +15,7 @@ import type {
 
 export const DATABASE_URL =
   process.env.DATABASE_URL ||
-  "postgres://medusa_user:Saanvi02052016%40@localhost:5432/medusa_digitalrohtak";
+  process.env.DATABASE_URL || process.env.DATABASE_URL || "postgres://medusa_user:Saanvi02052016%40@localhost:5432/medusa_digitalrohtak";
 
 export type ChannelRow = {
   id: string;

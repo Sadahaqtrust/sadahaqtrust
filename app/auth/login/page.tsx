@@ -4,12 +4,13 @@ import { useAuth } from "@/app/context/AuthContext";
 import { useLang } from "@/lib/lang";
 import Link from "next/link";
 
-type Step = "mobile" | "pin" | "email" | "otp" | "newpin";
+type Step = "mobile" | "pin" | "email" | "otp" | "newpin" | "emailpin";
 
 export default function LoginPage() {
-  const { loginWithMobile, registerWithMobile, customer } = useAuth();
+  const { loginWithMobile, registerWithMobile, login, customer } = useAuth();
   const { t } = useLang();
   const [from, setFrom] = useState("/");
+  const [mode, setMode] = useState<"mobile" | "email">("mobile");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -56,6 +57,29 @@ export default function LoginPage() {
     setError("");
     setStep("pin");
     setTimeout(() => pinRefs[0].current?.focus(), 100);
+  }
+
+  // Step 1 (email mode): validate email, go to PIN
+  async function handleEmailContinue() {
+    if (!email.includes("@") || email.length < 5) {
+      setError(t("सही ईमेल पता डालें", "Enter valid email"));
+      return;
+    }
+    setError("");
+    setStep("emailpin");
+    setTimeout(() => pinRefs[0].current?.focus(), 100);
+  }
+
+  // Step 2 (email mode): direct email + PIN login
+  async function handleEmailPinSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const pinStr = pin.join("");
+    if (pinStr.length < 4) { setError(t("4-अंकीय PIN डालें", "Enter 4-digit PIN")); return; }
+    setLoading(true); setError("");
+    const result = await login(email, pinStr, true);
+    setLoading(false);
+    if (result.error) { setError(result.error); return; }
+    window.location.href = from;
   }
 
   // Step 2: try login with PIN
@@ -139,6 +163,7 @@ export default function LoginPage() {
     email: t("ईमेल सत्यापन", "Email Verification"),
     otp: t("OTP डालें", "Enter OTP"),
     newpin: t("PIN सेट करें", "Set PIN"),
+    emailpin: t("PIN डालें", "Enter PIN"),
   };
 
   return (
@@ -150,25 +175,86 @@ export default function LoginPage() {
         {info && <div className="bg-amber-50 border border-amber-200 text-amber-700 rounded-xl px-4 py-3 mb-4 text-sm">{info}</div>}
         {error && <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 mb-4 text-sm">{error}</div>}
 
-        {/* Step 1: Mobile */}
+        {/* Step 1: Mobile or Email toggle */}
         {step === "mobile" && (
           <div className="flex flex-col gap-4">
+            {/* Mode toggle */}
+            <div className="flex bg-gray-100 rounded-xl p-1 gap-1">
+              <button
+                onClick={() => { setMode("mobile"); setError(""); }}
+                className={`flex-1 py-2 rounded-lg text-sm font-bold transition ${mode === "mobile" ? "bg-[#F47216] text-white shadow" : "text-gray-600"}`}>
+                📱 {t("मोबाइल", "Mobile")}
+              </button>
+              <button
+                onClick={() => { setMode("email"); setError(""); }}
+                className={`flex-1 py-2 rounded-lg text-sm font-bold transition ${mode === "email" ? "bg-[#F47216] text-white shadow" : "text-gray-600"}`}>
+                ✉️ {t("ईमेल", "Email")}
+              </button>
+            </div>
+
+            {mode === "mobile" ? (
+              <>
+                <div>
+                  <label className="text-[#F47216] font-bold text-xs uppercase block mb-1">{t("मोबाइल नंबर", "Mobile Number")}</label>
+                  <div className="flex items-center border-2 border-gray-200 focus-within:border-[#F47216] rounded-xl overflow-hidden">
+                    <span className="bg-gray-50 px-3 py-3 text-gray-500 font-semibold text-sm border-r border-gray-200">+91</span>
+                    <input type="tel" inputMode="numeric" maxLength={10} value={mobile}
+                      onChange={e => setMobile(e.target.value.replace(/\D/g, ""))}
+                      onKeyDown={e => e.key === "Enter" && handleMobileContinue()}
+                      placeholder="9876543210"
+                      className="flex-1 px-3 py-3 text-gray-700 text-sm outline-none" autoFocus />
+                  </div>
+                </div>
+                <button onClick={handleMobileContinue}
+                  className="bg-[#00A650] text-white py-3 rounded-xl font-extrabold text-lg hover:bg-[#F47216] transition-all">
+                  {t("जारी रखें →", "Continue →")}
+                </button>
+              </>
+            ) : (
+              <>
+                <div>
+                  <label className="text-[#F47216] font-bold text-xs uppercase block mb-1">{t("ईमेल पता", "Email Address")}</label>
+                  <input type="email" value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && handleEmailContinue()}
+                    placeholder="you@example.com"
+                    className="w-full border-2 border-gray-200 focus:border-[#F47216] rounded-xl px-4 py-3 text-gray-700 outline-none" autoFocus />
+                </div>
+                <button onClick={handleEmailContinue}
+                  className="bg-[#00A650] text-white py-3 rounded-xl font-extrabold text-lg hover:bg-[#F47216] transition-all">
+                  {t("जारी रखें →", "Continue →")}
+                </button>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Step: Email + PIN login */}
+        {step === "emailpin" && (
+          <form onSubmit={handleEmailPinSubmit} className="flex flex-col gap-4">
+            <p className="text-gray-600 text-sm">{email}
+              <button type="button" onClick={() => { setStep("mobile"); setPin(["","","",""]); setError(""); setInfo(""); }}
+                className="text-[#F47216] font-bold ml-2 underline text-xs">{t("बदलें", "Change")}</button>
+            </p>
             <div>
-              <label className="text-[#F47216] font-bold text-xs uppercase block mb-1">{t("मोबाइल नंबर", "Mobile Number")}</label>
-              <div className="flex items-center border-2 border-gray-200 focus-within:border-[#F47216] rounded-xl overflow-hidden">
-                <span className="bg-gray-50 px-3 py-3 text-gray-500 font-semibold text-sm border-r border-gray-200">+91</span>
-                <input type="tel" inputMode="numeric" maxLength={10} value={mobile}
-                  onChange={e => setMobile(e.target.value.replace(/\D/g, ""))}
-                  onKeyDown={e => e.key === "Enter" && handleMobileContinue()}
-                  placeholder="9876543210"
-                  className="flex-1 px-3 py-3 text-gray-700 text-sm outline-none" autoFocus />
+              <label className="text-[#F47216] font-bold text-xs uppercase block mb-2">{t("4-अंकीय PIN", "4-Digit PIN")}</label>
+              <div className="flex gap-3">
+                {pin.map((d, i) => (
+                  <input key={i} ref={pinRefs[i]} type="password" inputMode="numeric" maxLength={1} value={d}
+                    onChange={e => handleDigitInput(e.target.value, i, pin, setPin, pinRefs)}
+                    onKeyDown={e => handleDigitKey(e, i, pin, pinRefs)}
+                    className="w-14 h-14 text-center text-2xl font-extrabold border-2 border-gray-200 focus:border-[#F47216] rounded-xl outline-none text-[#F47216]" />
+                ))}
+              </div>
+              <div className="text-right mt-1">
+                <Link href="/auth/forgot-pin" className="text-[#00A650] text-xs hover:text-[#F47216] font-semibold">{t("PIN भूल गए?", "Forgot PIN?")}</Link>
               </div>
             </div>
-            <button onClick={handleMobileContinue}
-              className="bg-[#00A650] text-white py-3 rounded-xl font-extrabold text-lg hover:bg-[#F47216] transition-all">
-              {t("जारी रखें →", "Continue →")}
+            <button type="submit" disabled={loading}
+              className="bg-[#00A650] text-white py-3 rounded-xl font-extrabold text-lg hover:bg-[#F47216] transition-all disabled:opacity-60">
+              {loading ? t("जाँच रहे हैं...", "Verifying...") : t("साइन इन →", "Sign In →")}
             </button>
-          </div>
+          </form>
         )}
 
         {/* Step 2: PIN login */}

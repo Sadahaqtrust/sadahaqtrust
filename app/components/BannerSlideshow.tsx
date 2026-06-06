@@ -1,10 +1,11 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useEditLayout } from "@/app/components/EditLayout";
+import { useLang } from "@/lib/lang";
 
 interface BannerItem {
   id: string;
-  type: "image" | "video";
+  type: "image" | "video" | "audio";
   src: string;
   link?: string;
   sort: number;
@@ -12,6 +13,7 @@ interface BannerItem {
 
 export default function BannerSlideshow() {
   const { editMode, isAdminUser } = useEditLayout();
+  const { t } = useLang();
   const [banners, setBanners] = useState<BannerItem[]>([]);
   const [current, setCurrent] = useState(0);
   const [playing, setPlaying] = useState<string | null>(null);
@@ -156,53 +158,52 @@ export default function BannerSlideshow() {
   const activeBanner = banners[current];
 
   return (
-    <div className="relative w-full" style={{ height: "30vh", minHeight: "180px", maxHeight: "380px" }}>
-      {/* Toast */}
-      {toast && (
-        <div className="fixed top-4 right-4 bg-[#00A650] text-white px-5 py-2 rounded-xl shadow-xl z-[200] font-semibold text-sm">
-          {toast}
-        </div>
-      )}
-
-      {/* Slideshow area */}
-      <div className="relative w-full h-full overflow-hidden bg-black">
-        {banners.length === 0 && editMode && isAdminUser && (
-          <div className="flex items-center justify-center h-full text-white/60 text-lg font-semibold">
-            No banners yet — upload images or videos below
+    <div className="relative w-full">
+      {/* Slideshow display area */}
+      <div className="relative w-full overflow-hidden bg-black" style={{ height: "30vh", minHeight: "180px", maxHeight: "380px" }}>
+        {/* Toast */}
+        {toast && (
+          <div className="fixed top-4 right-4 bg-[#00A650] text-white px-5 py-2 rounded-xl shadow-xl z-[200] font-semibold text-sm">
+            {toast}
           </div>
         )}
 
-        {activeBanner && activeBanner.type === "video" && playing === activeBanner.id ? (
+        {banners.length === 0 && editMode && isAdminUser && (
+          <div className="flex items-center justify-center h-full text-white/60 text-lg font-semibold">
+            {t("अभी कोई बैनर नहीं", "No banners yet — upload below")}
+          </div>
+        )}
+
+        {activeBanner && activeBanner.type === "video" ? (
           <video
             ref={videoRef}
             src={activeBanner.src}
             className="w-full h-full object-cover"
             controls
+            preload="metadata"
+            playsInline
+            onPlay={() => { setPlaying(activeBanner.id); if (timerRef.current) clearInterval(timerRef.current); }}
+            onPause={() => setPlaying(null)}
             onEnded={() => { setPlaying(null); goTo((current + 1) % banners.length); }}
           />
-        ) : activeBanner ? (
-          <div
-            className="w-full h-full cursor-pointer"
-            onClick={() => {
-              if (activeBanner.type === "video") {
-                playVideo(activeBanner.id);
-              } else if (activeBanner.link) {
-                window.open(activeBanner.link, "_blank");
-              }
-            }}
-          >
-            {activeBanner.type === "video" ? (
-              <div className="relative w-full h-full">
-                <video src={activeBanner.src} className="w-full h-full object-cover" muted />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-black/50 rounded-full w-16 h-16 flex items-center justify-center">
-                    <span className="text-white text-3xl ml-1">▶</span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <img src={activeBanner.src} alt="Banner" className="w-full h-full object-contain bg-black" />
-            )}
+        ) : activeBanner && activeBanner.type === "audio" ? (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#F47216] to-[#00A650] gap-3 px-4">
+            <div className="text-6xl">🎵</div>
+            <p className="text-white font-extrabold text-sm text-center">{activeBanner.link || activeBanner.src.split("/").pop()}</p>
+            <audio
+              src={activeBanner.src}
+              controls
+              preload="metadata"
+              className="w-full max-w-xs"
+              onPlay={() => { setPlaying(activeBanner.id); if (timerRef.current) clearInterval(timerRef.current); }}
+              onPause={() => setPlaying(null)}
+              onEnded={() => { setPlaying(null); goTo((current + 1) % banners.length); }}
+            />
+          </div>
+        ) : activeBanner && activeBanner.type === "image" ? (
+          <div className="w-full h-full cursor-pointer"
+            onClick={() => { if (activeBanner.link) window.open(activeBanner.link, "_blank"); }}>
+            <img src={activeBanner.src} alt="Banner" className="w-full h-full object-contain bg-black" />
           </div>
         ) : null}
 
@@ -232,21 +233,21 @@ export default function BannerSlideshow() {
         )}
       </div>
 
-      {/* Admin controls */}
+      {/* Admin controls — outside slideshow, below it */}
       {editMode && isAdminUser && (
-        <div className="bg-gray-900 px-4 py-3">
-          <div className="flex items-center gap-3 flex-wrap mb-3">
-            <label className="bg-[#F47216] text-white px-4 py-2 rounded-xl font-bold text-sm cursor-pointer hover:bg-white hover:text-[#F47216] transition-all">
-              {uploading ? "Uploading..." : "📁 Upload Images/Videos"}
-              <input ref={fileRef} type="file" accept="image/*,video/*" multiple onChange={handleUpload} className="hidden" disabled={uploading} />
+        <div className="bg-gray-900 px-4 py-3 mt-1">{/* mt-1 separates from slideshow */}
+          <div className="flex flex-col gap-2">
+            {/* Upload button */}
+            <label className="flex items-center justify-center bg-[#F47216] text-white py-3 rounded-xl font-bold text-sm cursor-pointer hover:bg-[#E06010] active:scale-95 transition-all">
+              {uploading ? t("⏳ अपलोड हो रहा है...", "⏳ Uploading...") : t("📂 फ़ाइल चुनें — Image / Video / Audio", "📂 Choose File — Image / Video / Audio")}
+              <input ref={fileRef} type="file" accept="image/*,video/*,audio/*,.mp3,.mp4,.wav,.ogg,.m4a" multiple onChange={handleUpload} className="hidden" disabled={uploading} />
             </label>
+            {/* Save button */}
             <button onClick={saveBanners} disabled={saving}
-              className="bg-[#00A650] text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-white hover:text-[#00A650] transition-all disabled:opacity-60">
-              {saving ? "Saving..." : "💾 Save Banners"}
+              className="w-full bg-[#00A650] text-white py-3 rounded-xl font-bold text-sm hover:bg-[#007A3D] active:scale-95 transition-all disabled:opacity-60">
+              {saving ? t("सहेजा जा रहा है...", "Saving...") : t("बैनर सहेजें", "Save Banners")}
             </button>
-            <span className="text-white/50 text-xs">
-              Recommended: 1080×540px (2:1 ratio) · Max 20MB · Auto-compressed to 125KB
-            </span>
+            <p className="text-white/40 text-[10px] text-center">Image 20MB · Video 100MB · Audio 20MB</p>
           </div>
 
           {/* Banner list */}
@@ -257,6 +258,8 @@ export default function BannerSlideshow() {
                   <div className="h-16 bg-black flex items-center justify-center cursor-pointer" onClick={() => goTo(i)}>
                     {b.type === "video" ? (
                       <span className="text-white text-2xl">🎬</span>
+                    ) : b.type === "audio" ? (
+                      <span className="text-white text-2xl">🎵</span>
                     ) : (
                       <img src={b.src} alt="" className="w-full h-full object-cover" />
                     )}

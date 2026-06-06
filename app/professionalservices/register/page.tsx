@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 
 const MEDUSA_URL = process.env.NEXT_PUBLIC_MEDUSA_URL || "https://api.digitalrohtak.online"
@@ -11,6 +11,41 @@ const PROF_ID_MAP: Record<string, { org: string; label: string }> = {
   cat_cs:        { org: "Institute of Company Secretaries of India (ICSI)", label: "ICSI Membership Number" },
   cat_architect: { org: "Council of Architecture India (COA)", label: "COA Registration Number" },
   cat_civil_eng: { org: "Institution of Engineers India", label: "IE Membership Number" },
+  cat_structural_eng: { org: "Institution of Engineers India", label: "IE Membership Number" },
+  cat_mep_eng:   { org: "Institution of Engineers India", label: "IE Membership Number" },
+  cat_surveyor:  { org: "Survey of India / State Authority", label: "License Number" },
+  cat_valuer:    { org: "IBBI (Insolvency & Bankruptcy Board)", label: "Valuer Registration Number" },
+  cat_town_planner: { org: "Institute of Town Planners India", label: "ITPI Membership Number" },
+}
+
+// Subdomain → category_id for auto-selecting service type
+const SUBDOMAIN_CAT: Record<string, string> = {
+  advocate: "cat_lawyer", lawyer: "cat_lawyer", legal: "cat_lawyer",
+  ca: "cat_ca", accountant: "cat_ca", cs: "cat_cs",
+  property: "cat_property", realestate: "cat_property",
+  insurance: "cat_insurance", architect: "cat_architect",
+  interior: "cat_interior", notary: "cat_notary", hr: "cat_hr",
+  civilengineer: "cat_civil_eng", tax: "cat_tax_consultant",
+  gst: "cat_gst_consultant", finance: "cat_financial_planner",
+  stockadvisor: "cat_stock_advisor", loan: "cat_loan_agent",
+  mutualfund: "cat_mutual_fund", surveyor: "cat_surveyor",
+  valuer: "cat_valuer", townplanner: "cat_town_planner",
+  structural: "cat_structural_eng", mep: "cat_mep_eng",
+  landscape: "cat_landscape", vastu: "cat_vastu",
+  immigration: "cat_immigration", visa: "cat_visa_agent",
+  passport: "cat_passport_agent", detective: "cat_detective",
+  security: "cat_security_guard", eventmanagement: "cat_event_mgmt",
+  electrician: "cat_electrician", plumber: "cat_plumber",
+  carpenter: "cat_carpenter", painter: "cat_painter",
+  cleaning: "cat_cleaning", pestcontrol: "cat_pest",
+  salon: "cat_womens_salon", beauty: "cat_womens_salon",
+  gym: "cat_fitness", yoga: "cat_yoga",
+  tutor: "cat_tutor_6_10", coaching: "cat_coaching",
+  photography: "cat_photo", catering: "cat_caterer",
+  dentist: "cat_dentist", vet: "cat_vet",
+  pharmacy: "cat_doctor", health: "cat_doctor", hospital: "cat_doctor",
+  driving: "cat_driving", music: "cat_music",
+  laundry: "cat_laundry", tailoring: "cat_tailor", movers: "cat_packers",
 }
 
 const EXTRA_ATTRS: Record<string, { key: string; label: string; type: string; options?: string[] }[]> = {
@@ -54,6 +89,10 @@ export default function RegisterProfessionalPage() {
     consultation_fee: "", consultation_duration: 30,
   })
   const [extras, setExtras] = useState<Record<string, string[]>>({})
+  const [pin, setPin] = useState(["", "", "", ""])
+  const [confirmPin, setConfirmPin] = useState(["", "", "", ""])
+  const pinRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)]
+  const confirmRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)]
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
@@ -62,9 +101,21 @@ export default function RegisterProfessionalPage() {
     fetch(`${MEDUSA_URL}/store/service-categories`, { headers: { "x-publishable-api-key": PK } })
       .then(r => r.json())
       .then(d => {
-        const prof = d.categories?.find((c: any) => c.id === "cat_professional")
-        setSubcats(prof?.subcategories || [])
+        // Load all subcategories from all parent categories
+        const allSubs: Subcat[] = []
+        for (const cat of (d.categories || [])) {
+          allSubs.push(...(cat.subcategories || []))
+        }
+        setSubcats(allSubs)
       })
+
+    // Auto-select category based on subdomain
+    const host = window.location.hostname
+    if (host.endsWith(".digitalrohtak.online") && host !== "professionalservices.digitalrohtak.online") {
+      const sub = host.split(".")[0]
+      const catId = SUBDOMAIN_CAT[sub]
+      if (catId) set("category_id", catId)
+    }
   }, [])
 
   const set = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }))
@@ -76,12 +127,31 @@ export default function RegisterProfessionalPage() {
     })
   }
 
+  const handlePinInput = (val: string, idx: number, arr: string[], setArr: (a: string[]) => void, refs: React.RefObject<HTMLInputElement | null>[]) => {
+    if (!/^\d*$/.test(val)) return
+    const updated = [...arr]
+    updated[idx] = val.slice(-1)
+    setArr(updated)
+    if (val && idx < 3) refs[idx + 1].current?.focus()
+  }
+
+  const handlePinKey = (e: React.KeyboardEvent, idx: number, refs: React.RefObject<HTMLInputElement | null>[]) => {
+    if (e.key === "Backspace" && idx > 0 && !pin[idx]) refs[idx - 1].current?.focus()
+  }
+
   const profId = PROF_ID_MAP[form.category_id]
   const extraAttrs = EXTRA_ATTRS[form.category_id] || []
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
+
+    // Validate PIN
+    const pinStr = pin.join("")
+    const confirmStr = confirmPin.join("")
+    if (pinStr.length < 4) { setError("Please enter a 4-digit PIN for login"); return }
+    if (pinStr !== confirmStr) { setError("PINs do not match"); return }
+
     setSaving(true)
     try {
       const body: any = {
@@ -104,6 +174,24 @@ export default function RegisterProfessionalPage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.message || "Registration failed")
+
+      // Register provider auth (PIN login)
+      const authRes = await fetch(`${MEDUSA_URL}/store/providers/auth`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-publishable-api-key": PK },
+        body: JSON.stringify({
+          action: "register",
+          provider_id: data.provider.id,
+          email: form.email || undefined,
+          mobile: form.mobile,
+          pin: pinStr,
+        }),
+      })
+      const authData = await authRes.json()
+      if (!authRes.ok) {
+        console.warn("Auth registration warning:", authData.error)
+        // Don't fail the whole registration if auth setup fails — provider is created
+      }
 
       if (form.consultation_fee) {
         await fetch(`${MEDUSA_URL}/store/providers/${data.provider.id}/services`, {
@@ -128,7 +216,8 @@ export default function RegisterProfessionalPage() {
           <div className="text-5xl mb-4">✅</div>
           <h2 className="text-xl font-extrabold text-gray-900 mb-2">Registration Submitted!</h2>
           <p className="text-gray-500 text-sm">Your profile is under review. You will be verified within 24 hours and appear in search results instantly.</p>
-          <p className="text-[#F47216] text-xs font-bold mt-3">Redirecting...</p>
+          <p className="text-[#00A650] text-xs font-bold mt-3">You can now log in with your mobile/email + PIN</p>
+          <p className="text-[#F47216] text-xs font-bold mt-2">Redirecting...</p>
         </div>
       </div>
     )
@@ -316,6 +405,40 @@ export default function RegisterProfessionalPage() {
                     {l}
                   </label>
                 ))}
+              </div>
+            </div>
+
+            {/* Login PIN Setup */}
+            <div className="border-t border-gray-100 pt-4">
+              <p className="text-sm font-extrabold text-gray-800 mb-1">🔐 Set Your 4-Digit Login PIN *</p>
+              <p className="text-xs text-gray-400 mb-3">You will use this PIN to log in to your provider dashboard</p>
+              <div className="space-y-3">
+                <div>
+                  <label className={labelCls}>PIN</label>
+                  <div className="flex gap-2">
+                    {pin.map((d, i) => (
+                      <input key={i} ref={pinRefs[i]} type="password" inputMode="numeric"
+                        maxLength={1} value={d}
+                        onChange={e => handlePinInput(e.target.value, i, pin, setPin, pinRefs)}
+                        onKeyDown={e => handlePinKey(e, i, pinRefs)}
+                        className="w-12 h-12 text-center text-xl font-extrabold border-2 border-gray-200 focus:border-[#F47216] rounded-xl outline-none text-[#F47216]"
+                        aria-label={`PIN digit ${i + 1}`} />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className={labelCls}>Confirm PIN</label>
+                  <div className="flex gap-2">
+                    {confirmPin.map((d, i) => (
+                      <input key={i} ref={confirmRefs[i]} type="password" inputMode="numeric"
+                        maxLength={1} value={d}
+                        onChange={e => handlePinInput(e.target.value, i, confirmPin, setConfirmPin, confirmRefs)}
+                        onKeyDown={e => handlePinKey(e, i, confirmRefs)}
+                        className="w-12 h-12 text-center text-xl font-extrabold border-2 border-gray-200 focus:border-[#00A650] rounded-xl outline-none text-[#00A650]"
+                        aria-label={`Confirm PIN digit ${i + 1}`} />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 

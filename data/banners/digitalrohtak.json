@@ -1,3 +1,33 @@
 {
-  "updatedAt": "2026-05-13T03:34:50.610Z"
+  "banners": [
+    {
+      "id": "bnr_test_audio",
+      "type": "audio",
+      "src": "/banners/digitalrohtak/audio/bnr_1779214702687_yghz0u.mp3",
+      "link": "Welcome to Digital Rohtak",
+      "sort": 0
+    },
+    {
+      "id": "bnr_1779440461710_kdcthn",
+      "type": "video",
+      "src": "/banners/digitalrohtak/video/bnr_1779440461710_kdcthn.mp4",
+      "link": "",
+      "sort": 1
+    },
+    {
+      "id": "bnr_1779440461730_6r5x9g",
+      "type": "video",
+      "src": "/banners/digitalrohtak/video/bnr_1779440461730_6r5x9g.mp4",
+      "link": "",
+      "sort": 2
+    },
+    {
+      "id": "bnr_1779440461735_y6bggf",
+      "type": "video",
+      "src": "/banners/digitalrohtak/video/bnr_1779440461735_y6bggf.mp4",
+      "link": "",
+      "sort": 3
+    }
+  ],
+  "updatedAt": "2026-05-22T12:14:38.611Z"
 }

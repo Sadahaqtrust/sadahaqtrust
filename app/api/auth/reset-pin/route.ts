@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
 
     // Hash the PIN using scrypt-kdf via the medusa-backend's node_modules
     // This ensures we use the exact same library and params as Medusa
-    const medusaDir = "/home/sadahaqtrust/medusa-backend";
+    const medusaDir = "/home/sadahaqtrust/Digitalrohtak/medusa-backend";
     const hashCmd = `cd ${medusaDir} && node -e "const S=require('scrypt-kdf');S.kdf('${pin}',{logN:15,r:8,p:1}).then(h=>console.log(h.toString('base64')))"`;
     const passwordHash = execSync(hashCmd, { timeout: 30000 }).toString().trim();
 
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Update in PostgreSQL
-    const updateCmd = `PGPASSWORD='Saanvi02052016@' psql -h 127.0.0.1 -U medusa_user -d medusa_digitalrohtak -t -c "UPDATE provider_identity SET provider_metadata = jsonb_build_object('password', '${passwordHash}') WHERE entity_id = '${data.email}' RETURNING entity_id;"`;
+    const updateCmd = `PGPASSWORD='Saanvi02052016@' psql -h ${process.env.DATABASE_HOST || '127.0.0.1'} -U medusa_user -d medusa_digitalrohtak -t -c "UPDATE provider_identity SET provider_metadata = jsonb_build_object('password', '${passwordHash}') WHERE entity_id = '${data.email}' RETURNING entity_id;"`;
     const updateResult = execSync(updateCmd, { timeout: 10000 }).toString().trim();
 
     if (!updateResult.includes(data.email)) {

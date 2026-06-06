@@ -200,7 +200,7 @@ function CartInner() {
 
   if (loading) return <Loading />;
 
-  const DebugPanel = () => logs.length > 0 ? (
+  const DebugPanel = () => (process.env.NODE_ENV === "development" && logs.length > 0) ? (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-black/90 text-green-400 font-mono text-xs p-3 max-h-52 overflow-y-auto border-t-2 border-green-500">
       <div className="flex justify-between items-center mb-1">
         <span className="text-green-300 font-bold">🛒 CART PAGE — DEBUG TRACE</span>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import mysql from "mysql2/promise";
 
 const pool = mysql.createPool({
-  host: "127.0.0.1", port: 3306,
+  host: process.env.MYSQL_HOST || "127.0.0.1", port: parseInt(process.env.MYSQL_PORT || "3306"),
   user: "digitaladmin", password: "Saanvi02052016@",
   database: "sadahaqtrust_db", connectionLimit: 3,
 });
